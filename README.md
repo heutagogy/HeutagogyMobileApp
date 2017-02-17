@@ -13,5 +13,5 @@ To install android studio on NixOS: `nix-env -iA nixos.android-studio`
 
 Doc: https://facebook.github.io/react-native/docs/signed-apk-android.html
 
-Follow the instruction till “Generating the release APK” and then run `npm run build-android`.
+Follow the instruction till “Generating the release APK” and then run `npm run build-apk`.
 Signed APK file can be found in `android/app/build/outputs/apk`
