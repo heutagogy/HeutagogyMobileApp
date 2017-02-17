@@ -1,0 +1,3 @@
+rootProject.name = 'HeutagogyMobileApp'
+
+include ':app'
