@@ -7,7 +7,10 @@ export const NAME = 'heutagogy'
 
 //action types
 export const LOGIN = `${NAME}/LOGIN`
+export const LOGIN_FAILED = `${NAME}/LOGIN_FAILED`
 export const LOGOUT = `${NAME}/LOGOUT`
 export const SAVE_ARTICLE = `${NAME}/SAVE_ARTICLE`
 
 //as you can see above, each action is namespaced with module's name.
+
+export const API_VERSION = 'api/v1';

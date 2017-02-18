@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import { Field, reduxForm } from 'redux-form/immutable'
 import { connect } from 'react-redux'
+import { toJS } from 'immutable'
 
 
 const renderInput = ({ input: { onChange, ...restInput }, secureTextEntry }) => {
@@ -22,7 +23,7 @@ const renderInput = ({ input: { onChange, ...restInput }, secureTextEntry }) => 
 const Form = (props) => {
   const { handleSubmit, login } = props
 
-  const submit = (values) => login(values);
+  const submit = (values) => login(values.toJS());
 
   return (
     <View style={styles.container}>

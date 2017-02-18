@@ -18,11 +18,10 @@ const initialState = {
 
 export default handleActions({
   [LOGIN]: (state, action) => {
-    const newUser = fromJS({ name: 'Dima' })
+    console.log(JSON.stringify(action, null, 2));
 
     return {
       ...state,
-      authUser: newUser,
     }
   },
 }, initialState)
