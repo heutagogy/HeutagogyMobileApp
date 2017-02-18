@@ -1,22 +1,18 @@
 import React from 'react'
-import { createStore } from 'redux'
 import { Provider } from 'react-redux'
-import { combineReducers } from 'redux-immutablejs'
-import { reducer as form } from 'redux-form/immutable'
-import { fromJS } from 'immutable'
-import Form from './Form'
-import { View } from 'react-native'
 
-const reducer = combineReducers({ form })
+import { app } from './modules'
+import createStore from './createStore'
 
-const store = createStore(reducer, fromJS({}))
 
-const Container = props => {
+const store = createStore()
+
+const Main = () => {
   return (
     <Provider store={store}>
-      <Form />
+      <app.App />
     </Provider>
   )
 }
 
-export default Container
+export default Main

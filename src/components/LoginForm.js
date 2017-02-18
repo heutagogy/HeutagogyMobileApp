@@ -8,9 +8,8 @@ import {
 } from 'react-native'
 import { Field, reduxForm } from 'redux-form/immutable'
 
-const submit = (values) => {
-  console.log('submitting immutable form', values.toJS())
-}
+
+const submit = (values) => console.log('submitting immutable form', values.toJS())
 
 const renderInput = ({ input: { onChange, ...restInput }, secureTextEntry}) => {
   return <TextInput
@@ -21,7 +20,7 @@ const renderInput = ({ input: { onChange, ...restInput }, secureTextEntry}) => {
   />
 }
 
-const Form = props => {
+const Form = (props) => {
   const { handleSubmit } = props
 
   return (
@@ -69,7 +68,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-around',
     alignItems: 'center',
-    flex: 1, // to make it 100% width and height
+    flex: 1,
   },
   input: {
     borderColor: 'black',
