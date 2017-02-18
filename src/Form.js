@@ -23,7 +23,7 @@ class FormView extends Component {
         <Input name="password" label="Password" placeholder="My secret password" />
         <Input name="server_address" label="Server address" placeholder="https://heutagogy.herokuapp.com" />
         <ActionsContainer>
-          <Button onPress={handleSubmit(onSubmit)} submitting={submitting}>Submit</Button>
+          <Button onPress={handleSubmit(onSubmit)} submitting={submitting}>Save</Button>
         </ActionsContainer>
       </Form>
     )

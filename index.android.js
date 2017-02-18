@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
-  View
+  View,
+  Text,
 } from 'react-native';
-import Container from './src'
+import Container from './src';
+import Share from './share.android';
 
 export default class HeutagogyMobileApp extends Component {
   render() {
@@ -23,3 +25,4 @@ const styles = StyleSheet.create({
 });
 
 AppRegistry.registerComponent('HeutagogyMobileApp', () => HeutagogyMobileApp);
+AppRegistry.registerComponent('MyShareEx', () => Share);
