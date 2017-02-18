@@ -6,7 +6,7 @@ import { LOGIN } from './constants'
 
 const initialState = {
   authUser: fromJS({}),
-  server: 'https://heutagogy.herokuapp.com'
+  server: '',
 }
 
 //you can do better here, I was just showing that you need to make a new copy

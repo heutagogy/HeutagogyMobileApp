@@ -10,8 +10,6 @@ import { Field, reduxForm } from 'redux-form/immutable'
 import { connect } from 'react-redux'
 
 
-const submit = (values) => console.log('submitting immutable form', values.toJS())
-
 const renderInput = ({ input: { onChange, ...restInput }, secureTextEntry }) => {
   return <TextInput
     style={styles.input}
@@ -22,7 +20,9 @@ const renderInput = ({ input: { onChange, ...restInput }, secureTextEntry }) => 
 }
 
 const Form = (props) => {
-  const { handleSubmit } = props
+  const { handleSubmit, login } = props
+
+  const submit = (values) => login(values);
 
   return (
     <View style={styles.container}>
@@ -48,16 +48,7 @@ const Form = (props) => {
   )
 }
 
-const LoginFormWrapped = reduxForm({ form: 'LoginForm' })(Form)
-
-const mapStateToProps = (state) => ({
-  initialValues: {
-    server: state.heutagogy.server,
-  }
-})
-
-// it is connected just for filling server address with default value
-export default connect(mapStateToProps, null)(LoginFormWrapped)
+export default reduxForm({ form: 'LoginForm' })(Form)
 
 const styles = StyleSheet.create({
   title: {

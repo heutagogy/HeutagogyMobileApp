@@ -13,6 +13,12 @@ const styles = StyleSheet.create({
   }
 })
 
+const initialValues = {
+  initialValues: {
+    server: 'https://heutagogy.herokuapp.com',
+  }
+}
+
 const App = (props) => {
   const {
     login,
@@ -20,7 +26,7 @@ const App = (props) => {
 
   return (
     <View style={styles.container}>
-      <LoginForm />
+      <LoginForm login={login} {...initialValues} />
     </View>
   )
 }
