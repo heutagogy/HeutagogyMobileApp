@@ -7,11 +7,12 @@ import {
   View
 } from 'react-native'
 import { Field, reduxForm } from 'redux-form/immutable'
+import { connect } from 'react-redux'
 
 
 const submit = (values) => console.log('submitting immutable form', values.toJS())
 
-const renderInput = ({ input: { onChange, ...restInput }, secureTextEntry}) => {
+const renderInput = ({ input: { onChange, ...restInput }, secureTextEntry }) => {
   return <TextInput
     style={styles.input}
     onChangeText={onChange}
@@ -34,11 +35,11 @@ const Form = (props) => {
       </View>
       <View>
         <Text style={styles.label}>Password:</Text>
-        <Field secureTextEntry name="password" component={renderInput} />
+        <Field name="password" component={renderInput} secureTextEntry />
       </View>
       <View>
         <Text style={styles.label}>Server address:</Text>
-        <Field name="server-address" component={renderInput} />
+        <Field name="server" component={renderInput} />
       </View>
       <TouchableOpacity onPress={handleSubmit(submit)}>
         <Text style={styles.button}>Submit</Text>
@@ -47,7 +48,16 @@ const Form = (props) => {
   )
 }
 
-export default reduxForm({ form: 'immutable' })(Form)
+const LoginFormWrapped = reduxForm({ form: 'LoginForm' })(Form)
+
+const mapStateToProps = (state) => ({
+  initialValues: {
+    server: state.heutagogy.server,
+  }
+})
+
+// it is connected just for filling server address with default value
+export default connect(mapStateToProps, null)(LoginFormWrapped)
 
 const styles = StyleSheet.create({
   title: {

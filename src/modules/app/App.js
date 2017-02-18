@@ -36,7 +36,7 @@ App.propTypes = {
 
 export default connect(
   (state) => ({
-    authUser: state.heutagogy.authUser
+    authUser: state.heutagogy.authUser,
   }),
   (dispatch) => ({
     login: (loginInfo) => dispatch(actions.login(loginInfo)),
