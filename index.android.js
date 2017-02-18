@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
   AppRegistry,
   StyleSheet,
@@ -8,19 +8,17 @@ import {
 import Container from './src';
 import Share from './share.android';
 
-export default class HeutagogyMobileApp extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Container />
-      </View>
-    );
-  }
+const HeutagogyMobileApp = props => {
+  return (
+    <View style={styles.container}>
+      <Container />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1, // to make it 100% width and height
   }
 });
 

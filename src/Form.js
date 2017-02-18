@@ -35,7 +35,7 @@ const Form = props => {
       </View>
       <View>
         <Text style={styles.label}>Password:</Text>
-        <Field secureTextEntry={true} name="password" component={renderInput} />
+        <Field secureTextEntry name="password" component={renderInput} />
       </View>
       <View>
         <Text style={styles.label}>Server address:</Text>
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-around',
     alignItems: 'center',
-    flex: 1,
+    flex: 1, // to make it 100% width and height
   },
   input: {
     borderColor: 'black',
