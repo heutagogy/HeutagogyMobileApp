@@ -23,6 +23,7 @@ export const login = ({ username, password, server }) => {
 
       return dispatch({
         type: LOGIN,
+        meta: { username, server },
         payload: fromJS(normalize(json, authUserSchema))
       })
     },
