@@ -1,33 +1,56 @@
-import React, { Component } from 'react';
-import { reduxForm } from 'redux-form/immutable';
-import { ActionsContainer, Button, Form } from 'react-native-clean-form';
-import { Input } from 'react-native-clean-form/redux-form-immutable';
+import React from 'react'
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
+} from 'react-native'
+import { Field, reduxForm } from 'redux-form/immutable'
 
-
-const onSubmit = (values, dispatch) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      console.log(values.toJS())
-      resolve()
-    }, 1500)
-  })
+const submit = values => {
+  console.log('submitting immutable form', values.toJS())
 }
 
-class FormView extends Component {
-  render() {
-    const { handleSubmit, submitting } = this.props
+const renderInput = ({ input: { onChange, ...restInput }}) => {
+  return <TextInput style={styles.input} onChangeText={onChange} {...restInput} />
+}
 
-    return (
-      <Form>
-        <Input name="username" label="Username" placeholder="Drets" />
-        <Input name="password" label="Password" placeholder="My secret password" />
-        <Input name="server_address" label="Server address" placeholder="https://heutagogy.herokuapp.com" />
-        <ActionsContainer>
-          <Button onPress={handleSubmit(onSubmit)} submitting={submitting}>Save</Button>
-        </ActionsContainer>
-      </Form>
-    )
+const Form = props => {
+  const { handleSubmit } = props
+
+  return (
+    <View style={styles.container}>
+      <Text>Email:</Text>
+      <Field name="email" component={renderInput} />
+      <TouchableOpacity onPress={handleSubmit(submit)}>
+        <Text style={styles.button}>Submit</Text>
+      </TouchableOpacity>
+    </View>
+  )
+}
+
+export default reduxForm({
+  form: 'immutable'
+})(Form)
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: 'blue',
+    color: 'white',
+    height: 30,
+    lineHeight: 30,
+    marginTop: 10,
+    textAlign: 'center',
+    width: 250
+  },
+  container: {
+
+  },
+  input: {
+    borderColor: 'black',
+    borderWidth: 1,
+    height: 37,
+    width: 250
   }
-}
-
-export default reduxForm({ form: 'Form' })(FormView);
+})

@@ -8,6 +8,7 @@ import Form from './Form'
 import { View } from 'react-native'
 
 const reducer = combineReducers({ form })
+
 const store = createStore(reducer, fromJS({}))
 
 const Container = props => {
