@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions'
 import { fromJS } from 'immutable'
 
-import { LOGIN } from './constants'
+import { LOGIN, LOGOUT } from './constants'
 
 
 const initialState = fromJS({
@@ -18,11 +18,12 @@ export default handleActions({
     const user = userData ? userData.toList().first() : fromJS({})
 
     const newState = state.set('authUser', user)
-      .set('server', action.meta.server)
-      .set('username', action.meta.username)
-
-    console.log(JSON.stringify(newState, null, 2))
+          .set('meta', fromJS({
+            server: action.meta.server,
+            username: action.meta.username
+          }))
 
     return newState
   },
+  [LOGOUT]: (state, action) => state.set('authUser', fromJS({})),
 }, initialState)

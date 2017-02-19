@@ -28,7 +28,13 @@ const Form = (props) => {
 
   const submit = (values) => {
     login(values.toJS())
-    RNSKBucket.get('url', myGroup).then( (value) => console.log(value) )
+
+    fetch('http://www.poznan.uw.gov.pl/').then(response => response.text())
+      .then(responseText => {
+        console.log(responseText.match(/<title>(.*?)<\/title>/m)[1])
+      })
+
+    RNSKBucket.get('url', myGroup).then((value) => { console.log(value) })
     RNSKBucket.remove('url', myGroup)
   }
 

@@ -2,11 +2,7 @@ import React, { Component } from 'react'
 import Modal from 'react-native-modalbox'
 import ShareExtension from 'react-native-share-extension'
 
-import {
-  Button,
-  Text,
-  View,
-} from 'react-native'
+import { Button, Text, View } from 'react-native'
 import { RNSKBucket } from 'react-native-swiss-knife'
 
 const myGroup = 'group.heutagogy'

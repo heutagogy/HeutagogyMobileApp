@@ -1,4 +1,4 @@
-import { LOGIN, LOGIN_FAILED, API_VERSION } from './constants'
+import { LOGIN, LOGIN_FAILED, LOGOUT, API_VERSION } from './constants'
 import { normalize } from 'normalizr'
 import { fromJS } from 'immutable'
 
@@ -30,3 +30,7 @@ export const login = ({ username, password, server }) => {
     err => dispatch({ type: LOGIN_FAILED, err })
   );
 }
+
+export const logout = () => (dispatch) => (dispatch({ type: LOGOUT }))
+
+export const savePage = () => (dispatch) => ({})
