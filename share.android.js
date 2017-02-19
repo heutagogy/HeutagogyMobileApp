@@ -7,6 +7,9 @@ import {
   Text,
   View,
 } from 'react-native'
+import { RNSKBucket } from 'react-native-swiss-knife'
+
+const myGroup = 'group.heutagogy'
 
 export default class Share extends Component {
   constructor(props, context) {
@@ -42,7 +45,8 @@ export default class Share extends Component {
   }
 
   saving = () => {
-    console.log('saving...');
+    RNSKBucket.set('url', this.state.value, myGroup)
+    this.closing();
   }
 
   render() {

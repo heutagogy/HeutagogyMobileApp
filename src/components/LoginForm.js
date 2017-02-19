@@ -9,7 +9,10 @@ import {
 import { Field, reduxForm } from 'redux-form/immutable'
 import { connect } from 'react-redux'
 import { toJS } from 'immutable'
+import { RNSKBucket } from 'react-native-swiss-knife'
 
+
+const myGroup = 'group.heutagogy'
 
 const renderInput = ({ input: { onChange, ...restInput }, secureTextEntry }) => {
   return <TextInput
@@ -23,7 +26,11 @@ const renderInput = ({ input: { onChange, ...restInput }, secureTextEntry }) => 
 const Form = (props) => {
   const { handleSubmit, login } = props
 
-  const submit = (values) => login(values.toJS());
+  const submit = (values) => {
+    login(values.toJS())
+    RNSKBucket.get('url', myGroup).then( (value) => console.log(value) )
+    RNSKBucket.remove('url', myGroup)
+  }
 
   return (
     <View style={styles.container}>
