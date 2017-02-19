@@ -21,6 +21,8 @@ export default handleActions({
       .set('server', action.meta.server)
       .set('username', action.meta.username)
 
+    console.log(JSON.stringify(newState, null, 2))
+
     return newState
   },
 }, initialState)

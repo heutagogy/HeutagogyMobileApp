@@ -20,4 +20,4 @@ Signed APK file can be found in `android/app/build/outputs/apk`
 
 * Enable keyboard input in order to use R-R shortcut for reloading
 * Open debeloper menu: `adb shell input keyevent KEYCODE_MENU`
-* Use "Debug JS Remotely" to see the logs
+* Use "Debug JS Remotely" to see the logs in `http://localhost:8081/debugger-ui`

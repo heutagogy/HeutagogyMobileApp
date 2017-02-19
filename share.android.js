@@ -1,22 +1,17 @@
-/**
- * Sample React Native Share Extension
- * @flow
- */
-
 import React, { Component } from 'react'
 import Modal from 'react-native-modalbox'
 import ShareExtension from 'react-native-share-extension'
 
 import {
+  Button,
   Text,
-  TextInput,
   View,
-  TouchableOpacity
 } from 'react-native'
 
 export default class Share extends Component {
   constructor(props, context) {
     super(props, context)
+
     this.state = {
       isOpen: true,
       type: '',
@@ -46,19 +41,29 @@ export default class Share extends Component {
     })
   }
 
+  saving = () => {
+    console.log('saving...');
+  }
+
   render() {
     return (
-      <Modal backdrop={false}
-             style={{ backgroundColor: 'transparent' }} position="center" isOpen={this.state.isOpen} onClosed={this.onClose}>
-          <View style={{ alignItems: 'center', justifyContent:'center', flex: 1 }}>
-            <View style={{ borderColor: 'green', borderWidth: 1, backgroundColor: 'white', height: 200, width: 300 }}>
-              <TouchableOpacity onPress={this.closing}>
-                <Text>Close</Text>
-                <Text>type: { this.state.type }</Text>
-                <Text>value: { this.state.value }</Text>
-              </TouchableOpacity>
+      <Modal
+        backdrop={false}
+        style={{ backgroundColor: 'transparent' }}
+        position="center"
+        isOpen={this.state.isOpen}
+        onClosed={this.onClose}
+      >
+        <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+          <View style={{ width: 300, height: 200, backgroundColor: 'white', justifyContent: 'space-around'}}>
+            <Text style={{ color: 'black', textAlign: 'center', fontSize: 16 }}>Do you want to save the following link?</Text>
+            <Text style={{ color: 'black', textAlign: 'center' }}>{ this.state.value }</Text>
+            <View style={{ alignItems: 'flex-end', flexDirection: 'row', justifyContent: 'space-around'}}>
+              <Button title="OK" onPress={this.saving} />
+              <Button title="Cancel" onPress={this.closing}/>
             </View>
           </View>
+        </View>
       </Modal>
     )
   }
