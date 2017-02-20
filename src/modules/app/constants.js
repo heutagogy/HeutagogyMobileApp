@@ -14,3 +14,4 @@ export const SAVE_ARTICLE = `${NAME}/SAVE_ARTICLE`
 //as you can see above, each action is namespaced with module's name.
 
 export const API_VERSION = 'api/v1';
+export const GROUP = 'group.heutagogy'

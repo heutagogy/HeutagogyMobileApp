@@ -33,7 +33,12 @@ const App = (props) => {
   return (
     <View style={styles.container}>
       { isLoggedIn(authUser)
-        ? <WelcomePage logout={logout} savePage={savePage} meta={meta} />
+        ? <WelcomePage
+          authUser={authUser}
+          logout={logout}
+          savePage={savePage}
+          meta={meta}
+        />
         : <LoginForm login={login} {...initialValues} /> }
     </View>
   )
@@ -63,6 +68,6 @@ export default connect(
   (dispatch) => ({
     login: (loginInfo) => dispatch(actions.login(loginInfo)),
     logout: () => dispatch(actions.logout()),
-    savePage: (url, title) => dispatch(actions.savePage(url, title)),
+    savePage: ({ article, token, server }) => dispatch(actions.savePage({ article, token, server })),
   })
 )(App)

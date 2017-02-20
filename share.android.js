@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import Modal from 'react-native-modalbox'
 import ShareExtension from 'react-native-share-extension'
-
 import { Button, Text, View } from 'react-native'
 import { RNSKBucket } from 'react-native-swiss-knife'
 
-const myGroup = 'group.heutagogy'
+import { GROUP } from './src/modules/app/constants'
+
 
 export default class Share extends Component {
   constructor(props, context) {
@@ -41,7 +41,7 @@ export default class Share extends Component {
   }
 
   saving = () => {
-    RNSKBucket.set('url', this.state.value, myGroup)
+    RNSKBucket.set('url', this.state.value, GROUP)
     this.closing();
   }
 
