@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "android": "node node_modules/react-native-cli/index.js run-android",
-    "build-apk": "cd android && ./gradlew assembleRelease",
+    "android": "node node_modules/react-native/local-cli/cli.js run-android",
+    "android-release": "npm run build-apk && node node_modules/react-native/local-cli/cli.js run-android --variant=release",
+    "build-apk": "cd android && ./gradlew assembleRelease && cd ..",
     "test": "jest"
   },
   "dependencies": {
@@ -39,7 +40,6 @@
     "eslint": "^3.15.0",
     "eslint-plugin-fp": "^2.3.0",
     "jest": "18.1.0",
-    "react-native-cli": "^2.0.1",
     "react-test-renderer": "15.4.2"
   },
   "jest": {
