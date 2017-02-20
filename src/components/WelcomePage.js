@@ -16,7 +16,7 @@ async function getArticle() {
     return fromJS({})
   }
 
-  const article = { url }
+  const article = { url, timestamp: moment().format() }
 
   RNSKBucket.remove('url', GROUP)
 
