@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Map, fromJS } from 'immutable'
 
 import { LoginForm, WelcomePage } from './../../components'
-import { isLoggedIn } from './../../utils/userUtils'
+import { isLoggedIn } from './userUtils'
 import * as actions from './actions'
 
 const styles = StyleSheet.create({

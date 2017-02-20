@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "base-64": "^0.1.0",
     "immutable": "^3.8.1",
     "moment": "^2.17.1",
     "normalizr": "^3.2.1",
