@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import { connect } from 'react-redux'
-import { Map } from 'immutable'
+import { Map, fromJS } from 'immutable'
 
 import { LoginForm, WelcomePage } from './../../components'
 import { isLoggedIn } from './../../utils/userUtils'
@@ -52,10 +52,14 @@ App.propTypes = {
 }
 
 export default connect(
-  (state) => ({
-    authUser: state.heutagogy.get('authUser'),
-    meta: state.heutagogy.get('meta'),
-  }),
+  (state) => {
+    state = fromJS(state)
+
+    return {
+      authUser: state.getIn(['heutagogy', 'authUser']),
+      meta: state.getIn(['heutagogy', 'meta']),
+    }
+  },
   (dispatch) => ({
     login: (loginInfo) => dispatch(actions.login(loginInfo)),
     logout: () => dispatch(actions.logout()),

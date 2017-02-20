@@ -2,10 +2,10 @@ import React from 'react'
 import { Provider } from 'react-redux'
 
 import { app } from './modules'
-import createStore from './createStore'
+import { store, load } from './createStore'
 
 
-const store = createStore()
+load(store).then((newState) => console.log('Loaded state:', newState))
 
 const Main = () => {
   return (
