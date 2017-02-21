@@ -1,6 +1,6 @@
 # Heutagogy mobile app
 
-## Android simulator
+## Android
 
 ### Install
 
@@ -27,5 +27,5 @@ Signed APK file can be found in `android/app/build/outputs/apk`
 ### Tips
 
 * Enable keyboard input in emulator manager in order to use R-R shortcut for reloading
-* Open developer menu: `adb shell input keyevent KEYCODE_MENU`
+* To open developer menu: `adb shell input keyevent KEYCODE_MENU`
 * Use "Debug JS Remotely" to see the logs in `http://localhost:8081/debugger-ui`
