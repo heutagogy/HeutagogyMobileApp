@@ -29,3 +29,8 @@ Signed APK file can be found in `android/app/build/outputs/apk`
 * Enable keyboard input in emulator manager in order to use R-R shortcut for reloading
 * To open developer menu: `adb shell input keyevent KEYCODE_MENU`
 * Use "Debug JS Remotely" to see the logs in `http://localhost:8081/debugger-ui`
+
+## License
+The HeutagogyMobileApp source code is licensed by GNU Affero General Public License version 3 (APGLv3).
+
+The full text of the Heutagogy license is available in [LICENSE](./LICENSE) file.
