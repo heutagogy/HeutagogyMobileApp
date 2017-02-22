@@ -16,19 +16,12 @@ async function getArticle() {
     return fromJS({})
   }
 
-  const article = { url, timestamp: moment().format() }
-
   RNSKBucket.remove('url', GROUP)
 
-  const res = await fetch(url)
-  const resText = await res.text()
-  const title = resText.match(/<title>(.*?)<\/title>/m)
-
-  if (title !== null) {
-    article.title = title[1]
-  }
-
-  return fromJS(article)
+  return fromJS({
+    url,
+    timestamp: moment().format(),
+  })
 }
 
 export default class WelcomePage extends Component {
