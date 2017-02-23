@@ -1,7 +1,4 @@
 import React, { Component } from 'react'
-import TimerMixin from 'react-timer-mixin'
-import moment from 'moment';
-import reactMixin from 'react-mixin'
 import { Button, Text, View } from 'react-native'
 import { RNSKBucket } from 'react-native-swiss-knife'
 import { fromJS } from 'immutable'
@@ -9,37 +6,17 @@ import { fromJS } from 'immutable'
 import { GROUP } from '../modules/app/constants'
 
 
-async function getArticle() {
-  const url = await RNSKBucket.get('url', GROUP)
-
-  if (!url) {
-    return fromJS({})
-  }
-
-  RNSKBucket.remove('url', GROUP)
-
-  return fromJS({
-    url,
-    timestamp: moment().format(),
-  })
-}
-
 export default class WelcomePage extends Component {
   componentDidMount = () => {
-    this.setInterval(
-      () => {
-        getArticle().then((article) => {
-          if (!article.isEmpty()) {
-            this.props.savePage({
-              article,
-              server: this.props.meta.get('server'),
-              token: this.props.authUser.get('access_token'),
-            })
-          }
-        })
-      },
-      500
-    );
+    RNSKBucket.set('server', this.props.meta.get('server'))
+    RNSKBucket.set('token', this.props.authUser.get('access_token'))
+  }
+
+  logout = () => {
+    RNSKBucket.remove('server')
+    RNSKBucket.remove('token')
+
+    this.props.logout()
   }
 
   render() {
@@ -51,10 +28,8 @@ export default class WelcomePage extends Component {
         <Text style={{ fontSize: 20, color: 'black', margin: 20, textAlign: 'center' }}>
           Use "Share..." option in Google Chrome to save an article to Heutagogy.
         </Text>
-        <Button title="LOGOUT" onPress={this.props.logout} />
+        <Button title="LOGOUT" onPress={this.logout} />
       </View>
     )
   }
 }
-
-reactMixin(WelcomePage.prototype, TimerMixin)
