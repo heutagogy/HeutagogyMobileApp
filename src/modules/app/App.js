@@ -1,3 +1,4 @@
+/* eslint-disable fp/no-mutation */
 import React, { PropTypes } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import { connect } from 'react-redux'

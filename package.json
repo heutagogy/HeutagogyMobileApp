@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
+    "lint": "eslint src",
     "android": "node node_modules/react-native/local-cli/cli.js run-android",
     "link": "node node_modules/react-native/local-cli/cli.js link",
     "android-release": "npm run build-apk && node node_modules/react-native/local-cli/cli.js run-android --variant=release",
