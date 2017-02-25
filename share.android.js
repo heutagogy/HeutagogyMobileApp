@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Modal from 'react-native-modalbox'
 import ShareExtension from 'react-native-share-extension'
-import { Button, Text, View } from 'react-native'
+import { Button, Text, View, StyleSheet } from 'react-native'
 import { RNSKBucket } from 'react-native-swiss-knife'
 import moment from 'moment'
 
@@ -63,20 +63,20 @@ export default class Share extends Component {
     return (
       <Modal
         backdrop={false}
-        style={{ backgroundColor: 'transparent' }}
+        style={styles.modal}
         position="center"
         isOpen={this.state.isOpen}
         onClosed={this.onClose}
       >
-        <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+        <View style={styles.wrapper}>
          { !this.state.server || !this.state.token
-         ? <View style={{ width: 300, height: 200, backgroundColor: 'white', justifyContent: 'space-around', padding: 10}}>
-             <Text style={{ color: 'black', textAlign: 'center', fontSize: 16 }}>Please, login into Heutagogy app </Text>
-             <Button title="OK" onPress={this.closing} />
+         ? <View style={styles.container}>
+             <Text style={styles.msg}>Please, login into Heutagogy app </Text>
+             <Button title="CLOSE" onPress={this.closing} />
            </View>
-         : <View style={{ width: 300, height: 200, backgroundColor: 'white', justifyContent: 'space-around', padding: 10}}>
-             <Text style={{ color: 'black', textAlign: 'center', fontSize: 16 }}>Do you want to save the following link?</Text>
-             <Text style={{ color: 'black', textAlign: 'center' }}>{ this.state.url }</Text>
+         : <View style={styles.container}>
+             <Text style={styles.msg}>Do you want to save the following link?</Text>
+             <Text style={styles.url}>{ this.state.url }</Text>
              <Button title="OK" onPress={this.saving} />
              <Button title="Cancel" onPress={this.closing}/>
            </View>}
@@ -85,3 +85,30 @@ export default class Share extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+    height: 200,
+    justifyContent: 'space-around',
+    padding: 10,
+    width: 300,
+  },
+  msg: {
+    color: 'black',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  url: {
+    color: 'black',
+    textAlign: 'center',
+  },
+  modal: {
+    backgroundColor: 'transparent',
+  },
+  wrapper: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
+})
