@@ -1,0 +1,54 @@
+# https://github.com/codepath/android_guides/wiki/Setting-up-Travis-CI
+sudo: required
+
+language: android
+
+android:
+  components:
+  - build-tools-23.0.1
+  - android-23
+  - extra-android-m2repository
+  - extra-google-google_play_services
+  - extra-google-m2repository
+  - addon-google_apis-google-16
+
+env:
+  global:
+  - secure: mHCm591NZ5bjO+4kKJ4FZgqqeT3wKA52LBxW0u5DCvIw+iU1mWWMwllJu7Qk6ZENV6y8EME8IG+4KTQbPCni8duO4QeQXD1ulueoDeKYxPa4joNSPFBm8YUABUE2XDY9pTpRVnMEj4m/9PDVMTlO73E57VDZp48NdzWpIcOljxA7OcjCjQu+EO8ehv4qxiM1GdbsD1DKv/SpZmWmr9R2wDCIMoL3n1wjVrbb6X0FXwHJM9qv6wEtKi8FNyQn2HHGgYnh9yfCHkCl2oP8CIzlfZe01llrrtiGB75lSdTiqU5r8tycnC/FyayquMeNFG5WXnBwGIBlsWVH17uNCMzKz7x+WUGD2Y+G+NBcoejlHXO46RQakcX7/BmLXsDSRSBqhYT2TO4BqzQa1cO5CKB5OtUu92JWtqfpkh9Zu4QJneSVCaiewkFXLXurDKOAOw9esH2r/L1iO0bPC3SQhW6BExhl4lWqayOq6GhPPWKchYUM5EWyXBvvr9QocGFJ5u+yYrA088+JhDcJdzITiyiFCpauwIRb9GHaAwAUvVL+xhEMuee7y3pEaa1TgUUie5yVcH/GQMFxVXc37qKndx/4qaPwJUnmaVy/kD4kT+6LM/H42hq3JrdWtySvHzC1LIv1CnH329hgugWGUgCZZHQCwM+mh5jpsaEMNOmJKCc5qR4=
+  - secure: tg1m7usV0TtImtsOAQx9/LByQmLsul4BCODD2CLuZzJLHULyP/z/E+gtvazMdbWThXr0OWEO9vE7za11PXsF/d6854gLRMIetxUfqfJ7GHV7vdwGYX+N4UJaHswxmCWrwpRi0UV6O8NznPCypMaWH15Hyq3ei/n09KCXRvJi1WWlUWcZrrtPTxqowJGgDwPaFIavRl0/hSLNRv+aAJsXL1vvrp6lCKceGaR7u97y2EENaghXXiV3oEGrvNL/jI+cqi1J+sIuHXk9LzKez/EsnX72MZNBny/guB0pWHRG8f8ZGUAdhKkACfbshOTCDNjrVWxArxYUHzeRT+YdKrt5wSNMzFWHE+3KYhMsZ1wRDZPcuHsJ3qAG9Nvd+pMeWSBdZveYLanEbpRAXer2DbCnDwJkImAjpLJaVzLLEPs26pPSIbNVqCgh02eIaechTaZ/WkE5WcF/xKffXtJZ8FWIKtsd6oHJf++dl1sWS13LNmIXjpduq/EHRiIt6SaYc1GryQVPogN0LNv8HN3UIcSISpK47X9Co9Scycjni1GRIYhK/lIaMMQe//bPHI1mGjVvQ6iyu7dQeraNrCu2jbDlbGru538dZXHPIETXlx8/STAbJkb+2NROcJjWY7yRHaV+U0EnrU1JHZZQwFMKdYIIH2NtcmGHIPVxj/+HaOslQn4=
+  - MYAPP_RELEASE_STORE_FILE=my-release-key.keystore
+  - MYAPP_RELEASE_KEY_ALIAS=my-key-alias
+
+before_install:
+- nvm install 6
+- node --version
+
+install:
+- npm install
+- npm run link
+
+script:
+- npm run lint
+- cd android && ./gradlew assembleDebug && cd ..
+
+before_deploy:
+- openssl aes-256-cbc -K $encrypted_130f945cb2a4_key -iv $encrypted_130f945cb2a4_iv
+  -in my-release-key.keystore.enc -out my-release-key.keystore -d
+- mv my-release-key.keystore ./android/app
+- npm run build-apk
+- ls ./android/app/build/outputs/apk
+
+deploy:
+  provider: s3
+  access_key_id: AKIAIR5MKAXU6BZKVU3A
+  secret_access_key:
+    secure: gDQfhw4J9md3wCd5Yud5SKQ0W8I0S1DVUmDMF0ClZ39JhhAHc1mLRmuS9UxUlyPVncCG16wxlH0FWTkREgS2LNSecXlHXyLu0SYOY9WF/p1kWaDk83GPyUyZ1oNOCt08Hr11N5GwJ8q0WeIrayrXwYdUVd751Qk9lp+RWjLrfCSfhAZ7Pmwg9uqLvwxIzFaq4NteDlJQeoGzmnjFhRQ/kZgo3CmLtfiLHvfOif4qJz3gjs71kw2X40hkBrgvhc+5r2xMXYhjxhg2eBDRXaBSscCHAVXKJjIkKcvc+iuIO3UzZVaV8JrcMLdoOu4ey3tpMrGE3N/UEdKsGuWlC4TYzZsyrmsLkzVhIELI2l4ByTqXCMJi1SA6E0BFGFOLcZG/u/le4hp6D2C+JxnQ2oLA/CZs59BNqb3avW8OdxsncfdteeLMxJ95JXt3Hlvab1suEU6dY4xtaWacLYM+1yBJ9IELkniXY0CVndmCAihseuCHCeJNwtMoSD9X3bUO1a2c5diJSzryA8cQ6PDGBVAhdJBwDAbytuBzB9UuPuuoLVtoTzDhHUPNckSbTKFWmnX1plw3bgSJKOCLM+WV/x6pJAM5mSBfq36Hbdn1zLU7egDa7DZLGebQcse2c9YQqKVXInyPVgGdPkeYTt+Kh1/jnNm+o6OryXQq1Rf96IKA1/o=
+  bucket: heutagogy
+  region: eu-central-1
+  local-dir: android/app/build/outputs/apk
+  skip_cleanup: true
+  upload-dir: heutagogy-mobile-app
+  acl: public_read
+  on:
+    repo: heutagogy/HeutagogyMobileApp
+    branch: master
