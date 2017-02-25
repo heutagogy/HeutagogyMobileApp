@@ -70,15 +70,23 @@ export default class Share extends Component {
       >
         <View style={styles.wrapper}>
          { !this.state.server || !this.state.token
-         ? <View style={styles.container}>
+         ? <View style={styles.loginContainer}>
              <Text style={styles.msg}>Please, login into Heutagogy app </Text>
-             <Button title="CLOSE" onPress={this.closing} />
+             <View style={styles.buttons}>
+               <Button title="CLOSE" onPress={this.closing} />
+             </View>
            </View>
          : <View style={styles.container}>
-             <Text style={styles.msg}>Do you want to save the following link?</Text>
              <Text style={styles.url}>{ this.state.url }</Text>
-             <Button title="OK" onPress={this.saving} />
-             <Button title="Cancel" onPress={this.closing}/>
+             <Text style={styles.msg}>Do you want to save this link?</Text>
+             <View style={styles.buttons}>
+               <View style={styles.button}>
+                 <Button title="CANCEL" onPress={this.closing} />
+               </View>
+               <View style={styles.button}>
+                 <Button title="SAVE" onPress={this.saving} />
+               </View>
+             </View>
            </View>}
         </View>
       </Modal>
@@ -94,6 +102,13 @@ const styles = StyleSheet.create({
     padding: 10,
     width: 300,
   },
+  loginContainer: {
+    backgroundColor: 'white',
+    height: 130,
+    justifyContent: 'space-around',
+    padding: 10,
+    width: 300,
+  },
   msg: {
     color: 'black',
     fontSize: 16,
@@ -101,6 +116,7 @@ const styles = StyleSheet.create({
   },
   url: {
     color: 'black',
+    fontWeight: 'bold',
     textAlign: 'center',
   },
   modal: {
@@ -110,5 +126,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
+  },
+  buttons: {
+    alignItems: 'flex-end',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  button: {
+    margin: 7,
   },
 })
