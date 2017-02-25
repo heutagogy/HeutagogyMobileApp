@@ -32,15 +32,3 @@ export const login = ({ username, password, server }) => {
 }
 
 export const logout = () => (dispatch) => (dispatch({ type: LOGOUT }))
-
-export const savePage = ({ article, token, server }) => {
-  return (dispatch) => fetch(`${server}/${API_VERSION}/bookmarks`, {
-    method: 'POST',
-    headers: {
-      'Authorization': `JWT ${token}`,
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(article.toJS()),
-  })
-}

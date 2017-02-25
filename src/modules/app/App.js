@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   }
 })
 
@@ -25,7 +25,6 @@ const App = (props) => {
   const {
     login,
     logout,
-    savePage,
     authUser,
     meta,
   } = props
@@ -36,7 +35,6 @@ const App = (props) => {
         ? <WelcomePage
           authUser={authUser}
           logout={logout}
-          savePage={savePage}
           meta={meta}
         />
         : <LoginForm login={login} {...initialValues} /> }
@@ -53,7 +51,6 @@ App.propTypes = {
   authUser: PropTypes.instanceOf(Map),
   login: PropTypes.func.isRequired,
   logout: PropTypes.func.isRequired,
-  savePage: PropTypes.func.isRequired,
 }
 
 export default connect(
@@ -68,6 +65,5 @@ export default connect(
   (dispatch) => ({
     login: (loginInfo) => dispatch(actions.login(loginInfo)),
     logout: () => dispatch(actions.logout()),
-    savePage: ({ article, token, server }) => dispatch(actions.savePage({ article, token, server })),
   })
 )(App)
