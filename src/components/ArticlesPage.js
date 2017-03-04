@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Text, View, ListView, StyleSheet, Linking } from 'react-native'
+import { Button, Text, View, ListView, RefreshControl, StyleSheet, Linking } from 'react-native'
 import { RNSKBucket } from 'react-native-swiss-knife'
 import { fromJS } from 'immutable'
 
@@ -32,6 +32,16 @@ export default class ArticlesPage extends Component { // eslint-disable-line
     RNSKBucket.set('token', this.props.authUser.get('access_token'))
 
     this.props.fetchArticles()
+  }
+
+  componentWillReceiveProps = (nextProps) => {
+    const ds = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2,
+    })
+
+    this.setState({
+      articlesDataSource: ds.cloneWithRows(nextProps.articles.toJS()),
+    })
   }
 
   logout = () => {
@@ -75,6 +85,11 @@ export default class ArticlesPage extends Component { // eslint-disable-line
               divider
               centerElement={article.title}
               onPress={() => Linking.openURL(article.url)}
+            />}
+          refreshControl={
+            <RefreshControl
+              onRefresh={this.props.fetchArticles}
+              refreshing={false}
             />}
         />
       </View>
