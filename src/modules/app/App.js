@@ -8,6 +8,19 @@ import { LoginForm, ArticlesPage } from './../../components'
 import { isLoggedIn } from './userUtils'
 import * as actions from './actions'
 
+import { COLOR, ThemeProvider } from 'react-native-material-ui';
+
+const uiTheme = {
+  palette: {
+    primaryColor: COLOR.green500,
+  },
+  toolbar: {
+    container: {
+      height: 50,
+    },
+  },
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -29,19 +42,23 @@ const App = (props) => {
     fetchArticles,
     authUser,
     meta,
+    articles,
   } = props
 
   return (
-    <View style={styles.container}>
-      { isLoggedIn(authUser)
-        ? <ArticlesPage
-          authUser={authUser}
-          logout={logout}
-          meta={meta}
-          fetchArticles={fetchArticles}
-        />
-        : <LoginForm login={login} {...initialValues} /> }
-    </View>
+    <ThemeProvider uiTheme={uiTheme}>
+      <View style={styles.container}>
+        { isLoggedIn(authUser)
+          ? <ArticlesPage
+              authUser={authUser}
+              logout={logout}
+              meta={meta}
+              fetchArticles={fetchArticles}
+              articles={articles}
+            />
+          : <LoginForm login={login} {...initialValues} /> }
+      </View>
+    </ThemeProvider>
   )
 }
 
@@ -64,6 +81,7 @@ export default connect(
     return {
       authUser: state.getIn(['heutagogy', 'authUser']),
       meta: state.getIn(['heutagogy', 'meta']),
+      articles: state.getIn(['heutagogy', 'articles']),
     }
   },
   (dispatch) => ({
