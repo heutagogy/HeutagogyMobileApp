@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions'
 import { fromJS } from 'immutable'
 
-import { LOGIN, LOGOUT, ARTICLES_LOADED } from './constants'
+import { LOGIN, LOGOUT, ARTICLES_LOADED, ARTICLE_CONTENT } from './constants'
 
 
 const initialState = fromJS({
@@ -30,5 +30,6 @@ export default handleActions({
     const articles = action.payload.get('result').map((id) => action.payload.getIn(['entities', 'articles', `${id}`]))
 
     return state.set('articles', articles)
-  }
+  },
+  [ARTICLE_CONTENT]: (state, action) => state.setIn(['content', `${action.meta.id}`], action.payload),
 }, initialState)

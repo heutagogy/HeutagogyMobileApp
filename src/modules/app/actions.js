@@ -1,4 +1,4 @@
-import { LOGIN, LOGIN_FAILED, LOGOUT, ARTICLES_LOADED, API_VERSION } from './constants'
+import { LOGIN, LOGIN_FAILED, LOGOUT, ARTICLES_LOADED, ARTICLE_CONTENT, API_VERSION } from './constants'
 import { normalize } from 'normalizr'
 import { fromJS } from 'immutable'
 
@@ -50,6 +50,28 @@ export const fetchArticles = () => (dispatch, getStore) => {
     dispatch({
       type: ARTICLES_LOADED,
       payload: fromJS(normalize(json, articlesSchema))
+    })
+  })
+}
+
+export const saveOffline = (id) => (dispatch, getStore) => {
+  const store = fromJS(getStore())
+  const server = store.getIn(['heutagogy', 'meta', 'server'])
+  const token = store.getIn(['heutagogy', 'authUser', 'access_token'])
+
+  fetch(`${server}/${API_VERSION}/bookmarks/${id}/content`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `JWT ${token}`,
+      'Accept': 'application/json',
+    },
+  }).then((response) => response.json()
+  ).then((json) => {
+    console.log(json)
+    dispatch({
+      type: ARTICLE_CONTENT,
+      meta: { id },
+      payload: fromJS(json),
     })
   })
 }

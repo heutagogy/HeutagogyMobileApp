@@ -11,6 +11,7 @@ export const LOGIN_FAILED = `${NAME}/LOGIN_FAILED`
 export const LOGOUT = `${NAME}/LOGOUT`
 export const SAVE_ARTICLE = `${NAME}/SAVE_ARTICLE`
 export const ARTICLES_LOADED = `${NAME}/ARTICLES_LOADED`
+export const ARTICLE_CONTENT = `${NAME}/ARTICLE_CONTENT`
 
 //as you can see above, each action is namespaced with module's name.
 
