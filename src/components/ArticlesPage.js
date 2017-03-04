@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Text, View, ScrollView, StyleSheet } from 'react-native'
+import { Button, Text, View, ScrollView, StyleSheet, Linking } from 'react-native'
 import { RNSKBucket } from 'react-native-swiss-knife'
 import { fromJS } from 'immutable'
 
@@ -32,10 +32,6 @@ export default class ArticlesPage extends Component { // eslint-disable-line
   render() {
     const { meta } = this.props
 
-    this.props.articles.map((article) =>
-      console.log(article)
-    )
-
     return (
       <View style={styles.container}>
         <Toolbar centerElement="Heutagogy"/>
@@ -45,7 +41,7 @@ export default class ArticlesPage extends Component { // eslint-disable-line
             key={article.get('id')}
             divider
             centerElement={article.get('title')}
-            onClick={() => {}}
+            onPress={() => Linking.openURL(article.get('url'))}
           />))}
         </ScrollView>
       </View>
