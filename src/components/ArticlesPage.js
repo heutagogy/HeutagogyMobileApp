@@ -29,12 +29,31 @@ export default class ArticlesPage extends Component { // eslint-disable-line
     this.props.logout()
   }
 
+  handleMenuPress = ({ action, result, index }) => {
+    if (action === 'menu' && result === 'itemSelected') {
+      switch (index) {
+        case 0:
+          this.logout()
+      }
+    }
+  }
+
   render() {
     const { meta } = this.props
 
     return (
       <View style={styles.container}>
-        <Toolbar centerElement="Heutagogy"/>
+        <Toolbar
+          centerElement="Heutagogy"
+          rightElement={{
+            menu: {
+              labels: [
+                'Log out',
+              ],
+            },
+          }}
+          onRightElementPress={this.handleMenuPress}
+        />
         <ScrollView style={styles.container}>
           {this.props.articles.map((article) => (
           <ListItem
@@ -45,13 +64,6 @@ export default class ArticlesPage extends Component { // eslint-disable-line
           />))}
         </ScrollView>
       </View>
-      // <View style={{ alignItems: 'center' }}>
-      //   <Text style={{ fontSize: 20, color: 'black' }}>Welcome { this.props.meta.get('username') }!</Text>
-      //   <Text style={{ fontSize: 20, color: 'black', margin: 20, textAlign: 'center' }}>
-      //     Use "Share..." option in Google Chrome to save an article to Heutagogy.
-      //   </Text>
-      //   <Button title="LOGOUT" onPress={this.logout} />
-      // </View>
     )
   }
 }
