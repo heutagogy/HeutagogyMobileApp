@@ -43,6 +43,8 @@ const App = (props) => {
     authUser,
     meta,
     articles,
+    offlineArticles,
+    saveOffline,
   } = props
 
   return (
@@ -55,6 +57,8 @@ const App = (props) => {
               meta={meta}
               fetchArticles={fetchArticles}
               articles={articles}
+              offlineArticles={offlineArticles}
+              saveOffline={saveOffline}
             />
           : <LoginForm login={login} {...initialValues} /> }
       </View>
@@ -82,11 +86,13 @@ export default connect(
       authUser: state.getIn(['heutagogy', 'authUser']),
       meta: state.getIn(['heutagogy', 'meta']),
       articles: state.getIn(['heutagogy', 'articles'], fromJS([])),
+      offlineArticles: state.getIn(['heutagogy', 'content'], fromJS({})),
     }
   },
   (dispatch) => ({
     login: (loginInfo) => dispatch(actions.login(loginInfo)),
     logout: () => dispatch(actions.logout()),
     fetchArticles: () => dispatch(actions.fetchArticles()),
+    saveOffline: (url) => dispatch(actions.saveOffline(url)),
   })
 )(App)

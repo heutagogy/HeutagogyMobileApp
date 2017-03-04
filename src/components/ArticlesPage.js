@@ -7,6 +7,7 @@ import { fromJS } from 'immutable'
 import { GROUP } from '../modules/app/constants'
 
 import { ListItem, Subheader, Toolbar } from 'react-native-material-ui/src';
+import { COLOR } from 'react-native-material-ui';
 
 const styles = StyleSheet.create({
   container: {
@@ -61,6 +62,26 @@ export default class ArticlesPage extends Component { // eslint-disable-line
     }
   }
 
+  renderRow = (article) => {
+    const offlineContent = this.props.offlineArticles.get(`${article.id}`)
+
+    const style = {
+      rightElement: {
+        color: offlineContent ? COLOR.blue200 : COLOR.grey500,
+      },
+    }
+
+    return (<ListItem
+      key={article.id}
+      divider
+      centerElement={article.title}
+      onPress={() => Linking.openURL(article.url)}
+      rightElement="save"
+      style={style}
+      onRightElementPress={() => this.props.saveOffline(article.id)}
+    />)
+  }
+
   render() {
     const { meta } = this.props
 
@@ -80,13 +101,7 @@ export default class ArticlesPage extends Component { // eslint-disable-line
         <ListView
           style={styles.container}
           dataSource={this.state.articlesDataSource}
-          renderRow={(article) =>
-            <ListItem
-              key={article.id}
-              divider
-              centerElement={article.title}
-              onPress={() => Linking.openURL(article.url)}
-            />}
+          renderRow={this.renderRow}
           refreshControl={
             <RefreshControl
               onRefresh={this.props.fetchArticles}
