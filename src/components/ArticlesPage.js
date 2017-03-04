@@ -1,5 +1,6 @@
+/* eslint-disable fp/no-mutation */
 import React, { Component } from 'react'
-import { Button, Text, View, ScrollView, StyleSheet, Linking } from 'react-native'
+import { Button, Text, View, ListView, RefreshControl, StyleSheet, Linking } from 'react-native'
 import { RNSKBucket } from 'react-native-swiss-knife'
 import { fromJS } from 'immutable'
 
@@ -15,11 +16,33 @@ const styles = StyleSheet.create({
 });
 
 export default class ArticlesPage extends Component { // eslint-disable-line
+  constructor(props) {
+    super(props)
+
+    const ds = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2,
+    })
+
+    this.state = {
+      articlesDataSource: ds.cloneWithRows(props.articles.toJS()),
+    }
+  }
+
   componentDidMount = () => {
     RNSKBucket.set('server', this.props.meta.get('server'))
     RNSKBucket.set('token', this.props.authUser.get('access_token'))
 
     this.props.fetchArticles()
+  }
+
+  componentWillReceiveProps = (nextProps) => {
+    const ds = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2,
+    })
+
+    this.setState({
+      articlesDataSource: ds.cloneWithRows(nextProps.articles.toJS()),
+    })
   }
 
   logout = () => {
@@ -54,15 +77,22 @@ export default class ArticlesPage extends Component { // eslint-disable-line
           }}
           onRightElementPress={this.handleMenuPress}
         />
-        <ScrollView style={styles.container}>
-          {this.props.articles.map((article) => (
-          <ListItem
-            key={article.get('id')}
-            divider
-            centerElement={article.get('title')}
-            onPress={() => Linking.openURL(article.get('url'))}
-          />))}
-        </ScrollView>
+        <ListView
+          style={styles.container}
+          dataSource={this.state.articlesDataSource}
+          renderRow={(article) =>
+            <ListItem
+              key={article.id}
+              divider
+              centerElement={article.title}
+              onPress={() => Linking.openURL(article.url)}
+            />}
+          refreshControl={
+            <RefreshControl
+              onRefresh={this.props.fetchArticles}
+              refreshing={false}
+            />}
+        />
       </View>
     )
   }
