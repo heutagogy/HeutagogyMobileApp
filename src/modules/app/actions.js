@@ -1,8 +1,9 @@
-import { LOGIN, LOGIN_FAILED, LOGOUT, API_VERSION } from './constants'
+import { LOGIN, LOGIN_FAILED, LOGOUT, ARTICLES_LOADED, API_VERSION } from './constants'
 import { normalize } from 'normalizr'
 import { fromJS } from 'immutable'
 
 import authUserSchema from './authUserSchema'
+import articlesSchema from './articlesSchema'
 
 
 export const login = ({ username, password, server }) => {
@@ -32,3 +33,23 @@ export const login = ({ username, password, server }) => {
 }
 
 export const logout = () => (dispatch) => (dispatch({ type: LOGOUT }))
+
+export const fetchArticles = () => (dispatch, getStore) => {
+  const store = fromJS(getStore())
+  const server = store.getIn(['heutagogy', 'meta', 'server'])
+  const token = store.getIn(['heutagogy', 'authUser', 'access_token'])
+
+  fetch(`${server}/${API_VERSION}/bookmarks?per_page=2000`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `JWT ${token}`,
+      'Accept': 'application/json',
+    },
+  }).then((response) => response.json()
+  ).then((json) => {
+    dispatch({
+      type: ARTICLES_LOADED,
+      payload: fromJS(normalize(json, articlesSchema))
+    })
+  })
+}

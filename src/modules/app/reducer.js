@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions'
 import { fromJS } from 'immutable'
 
-import { LOGIN, LOGOUT } from './constants'
+import { LOGIN, LOGOUT, ARTICLES_LOADED } from './constants'
 
 
 const initialState = fromJS({
@@ -26,4 +26,5 @@ export default handleActions({
     return newState
   },
   [LOGOUT]: (state, action) => state.set('authUser', fromJS({})),
+  [ARTICLES_LOADED]: (state, action) => state.set('articles', action.payload),
 }, initialState)

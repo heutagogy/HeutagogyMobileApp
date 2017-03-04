@@ -10,6 +10,8 @@ export default class ArticlesPage extends Component { // eslint-disable-line
   componentDidMount = () => {
     RNSKBucket.set('server', this.props.meta.get('server'))
     RNSKBucket.set('token', this.props.authUser.get('access_token'))
+
+    this.props.fetchArticles()
   }
 
   logout = () => {

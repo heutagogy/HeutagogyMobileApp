@@ -26,6 +26,7 @@ const App = (props) => {
   const {
     login,
     logout,
+    fetchArticles,
     authUser,
     meta,
   } = props
@@ -37,6 +38,7 @@ const App = (props) => {
           authUser={authUser}
           logout={logout}
           meta={meta}
+          fetchArticles={fetchArticles}
         />
         : <LoginForm login={login} {...initialValues} /> }
     </View>
@@ -52,6 +54,7 @@ App.propTypes = {
   authUser: PropTypes.instanceOf(Map),
   login: PropTypes.func.isRequired,
   logout: PropTypes.func.isRequired,
+  fetchArticles: PropTypes.func.isRequired,
 }
 
 export default connect(
@@ -66,5 +69,6 @@ export default connect(
   (dispatch) => ({
     login: (loginInfo) => dispatch(actions.login(loginInfo)),
     logout: () => dispatch(actions.logout()),
+    fetchArticles: () => dispatch(actions.fetchArticles()),
   })
 )(App)
