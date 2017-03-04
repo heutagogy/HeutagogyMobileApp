@@ -1,6 +1,6 @@
 /* eslint-disable fp/no-mutation */
 import React, { Component } from 'react'
-import { Button, Text, View, ListView, RefreshControl, StyleSheet, Linking } from 'react-native'
+import { Button, Navigator, Text, View, ListView, RefreshControl, StyleSheet, Linking, WebView, BackAndroid } from 'react-native'
 import { RNSKBucket } from 'react-native-swiss-knife'
 import { fromJS } from 'immutable'
 
@@ -14,6 +14,15 @@ const styles = StyleSheet.create({
     flex: 1,
     alignSelf: 'stretch',
   },
+});
+
+let navigator;
+BackAndroid.addEventListener('hardwareBackPress', () => {
+  if (navigator && navigator.getCurrentRoutes().length > 1) {
+    navigator.pop();
+    return true;
+  }
+  return false;
 });
 
 export default class ArticlesPage extends Component { // eslint-disable-line
@@ -62,7 +71,7 @@ export default class ArticlesPage extends Component { // eslint-disable-line
     }
   }
 
-  renderRow = (article) => {
+  renderRow = (navigator) => (article) => {
     const offlineContent = this.props.offlineArticles.get(`${article.id}`)
 
     const style = {
@@ -78,8 +87,54 @@ export default class ArticlesPage extends Component { // eslint-disable-line
       onPress={() => Linking.openURL(article.url)}
       rightElement="save"
       style={style}
-      onRightElementPress={() => this.props.saveOffline(article.id)}
+      onRightElementPress={() =>
+        offlineContent ? navigator.push({ type: 'article', id: article.id }) : this.props.saveOffline(article.id)}
     />)
+  }
+
+  renderScene = (route, navigator) => {
+    if (route.type === 'list') {
+      return <ListView
+        style={styles.container}
+        dataSource={this.state.articlesDataSource}
+        renderRow={this.renderRow(navigator)}
+        refreshControl={
+          <RefreshControl
+            onRefresh={this.props.fetchArticles}
+            refreshing={false}
+          />}
+      />
+    } else {
+      const content = this.props.offlineArticles.get(`${route.id}`)
+
+      // some css to make page beautiful
+      const css = `
+        <style type="text/css">
+          body {
+            margin: 40px auto;
+            max-width: 650px;
+            line-height: 1.6;
+            font-size: 18px;
+            color: #444;
+            padding: 0 10px
+          }
+
+          h1,h2,h3 {
+            line-height: 1.2
+          }
+
+          img {
+            max-width: 100%;
+            height: auto;
+          }
+        </style>
+      `;
+
+      return <WebView
+        source={{ html: `${css} ${content.get('html')}` }}
+        scalesPageToFit
+      />
+    }
   }
 
   render() {
@@ -98,15 +153,10 @@ export default class ArticlesPage extends Component { // eslint-disable-line
           }}
           onRightElementPress={this.handleMenuPress}
         />
-        <ListView
-          style={styles.container}
-          dataSource={this.state.articlesDataSource}
-          renderRow={this.renderRow}
-          refreshControl={
-            <RefreshControl
-              onRefresh={this.props.fetchArticles}
-              refreshing={false}
-            />}
+        <Navigator
+          ref={(nav) => { navigator = nav }}
+          initialRoute={{ type: 'list' }}
+          renderScene={this.renderScene}
         />
       </View>
     )
