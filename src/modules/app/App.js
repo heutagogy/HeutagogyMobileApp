@@ -4,9 +4,22 @@ import { StyleSheet, View, Text } from 'react-native'
 import { connect } from 'react-redux'
 import { Map, fromJS } from 'immutable'
 
-import { LoginForm, WelcomePage } from './../../components'
+import { LoginForm, ArticlesPage } from './../../components'
 import { isLoggedIn } from './userUtils'
 import * as actions from './actions'
+
+import { COLOR, ThemeProvider } from 'react-native-material-ui';
+
+const uiTheme = {
+  palette: {
+    primaryColor: COLOR.green500,
+  },
+  toolbar: {
+    container: {
+      height: 50,
+    },
+  },
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -26,20 +39,26 @@ const App = (props) => {
   const {
     login,
     logout,
+    fetchArticles,
     authUser,
     meta,
+    articles,
   } = props
 
   return (
-    <View style={styles.container}>
-      { isLoggedIn(authUser)
-        ? <WelcomePage
-          authUser={authUser}
-          logout={logout}
-          meta={meta}
-        />
-        : <LoginForm login={login} {...initialValues} /> }
-    </View>
+    <ThemeProvider uiTheme={uiTheme}>
+      <View style={styles.container}>
+        { isLoggedIn(authUser)
+          ? <ArticlesPage
+              authUser={authUser}
+              logout={logout}
+              meta={meta}
+              fetchArticles={fetchArticles}
+              articles={articles}
+            />
+          : <LoginForm login={login} {...initialValues} /> }
+      </View>
+    </ThemeProvider>
   )
 }
 
@@ -52,6 +71,7 @@ App.propTypes = {
   authUser: PropTypes.instanceOf(Map),
   login: PropTypes.func.isRequired,
   logout: PropTypes.func.isRequired,
+  fetchArticles: PropTypes.func.isRequired,
 }
 
 export default connect(
@@ -61,10 +81,12 @@ export default connect(
     return {
       authUser: state.getIn(['heutagogy', 'authUser']),
       meta: state.getIn(['heutagogy', 'meta']),
+      articles: state.getIn(['heutagogy', 'articles']),
     }
   },
   (dispatch) => ({
     login: (loginInfo) => dispatch(actions.login(loginInfo)),
     logout: () => dispatch(actions.logout()),
+    fetchArticles: () => dispatch(actions.fetchArticles()),
   })
 )(App)
