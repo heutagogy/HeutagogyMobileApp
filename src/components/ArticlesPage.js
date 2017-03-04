@@ -1,3 +1,4 @@
+/* eslint-disable fp/no-mutation */
 import React, { Component } from 'react'
 import { Button, Text, View, ListView, RefreshControl, StyleSheet, Linking } from 'react-native'
 import { RNSKBucket } from 'react-native-swiss-knife'
