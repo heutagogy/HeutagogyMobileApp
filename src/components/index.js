@@ -1,2 +1,2 @@
 export { default as LoginForm } from './LoginForm'
-export { default as WelcomePage } from './WelcomePage'
+export { default as ArticlesPage } from './ArticlesPage'

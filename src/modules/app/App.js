@@ -4,7 +4,7 @@ import { StyleSheet, View, Text } from 'react-native'
 import { connect } from 'react-redux'
 import { Map, fromJS } from 'immutable'
 
-import { LoginForm, WelcomePage } from './../../components'
+import { LoginForm, ArticlesPage } from './../../components'
 import { isLoggedIn } from './userUtils'
 import * as actions from './actions'
 
@@ -33,7 +33,7 @@ const App = (props) => {
   return (
     <View style={styles.container}>
       { isLoggedIn(authUser)
-        ? <WelcomePage
+        ? <ArticlesPage
           authUser={authUser}
           logout={logout}
           meta={meta}

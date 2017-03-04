@@ -6,7 +6,7 @@ import { fromJS } from 'immutable'
 import { GROUP } from '../modules/app/constants'
 
 
-export default class WelcomePage extends Component { // eslint-disable-line
+export default class ArticlesPage extends Component { // eslint-disable-line
   componentDidMount = () => {
     RNSKBucket.set('server', this.props.meta.get('server'))
     RNSKBucket.set('token', this.props.authUser.get('access_token'))
