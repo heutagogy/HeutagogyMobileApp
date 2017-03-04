@@ -15,6 +15,7 @@ export default class Share extends Component {
     this.state = {
       isOpen: true,
       server: null, token: null, type: null, url: null,
+      article: null,
     }
   }
 
@@ -29,6 +30,10 @@ export default class Share extends Component {
     const { value } = await ShareExtension.data()
 
     this.setState({ url: value })
+
+    this.getArticleByUrl(value).then((result) =>
+      this.setState({ article: result[0] || null })
+    )
   }
 
   onClose() {
@@ -37,6 +42,21 @@ export default class Share extends Component {
 
   closing = () => {
     this.setState({ isOpen: false })
+  }
+
+  async getArticleByUrl(url) {
+    // Token and server are not yet set into state bucause of
+    // asynchronous nature of setState.
+    const server = await RNSKBucket.get('server')
+    const token = await RNSKBucket.get('token')
+
+    return fetch(`${server}/${API_VERSION}/bookmarks?url=${encodeURIComponent(url)}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `JWT ${token}`,
+        'Accept': 'application/json',
+      },
+    }).then((response) => response.json())
   }
 
   saveArticle() {
@@ -79,6 +99,12 @@ export default class Share extends Component {
          : <View style={styles.container}>
              <Text style={styles.url}>{ this.state.url }</Text>
              <Text style={styles.msg}>Do you want to save this link?</Text>
+             {this.state.article
+              ? <View>
+                <Text style={styles.msg}>Already saved as</Text>
+                <Text style={styles.title}>{this.state.article.title}</Text>
+              </View>
+              : null}
              <View style={styles.buttons}>
                <View style={styles.button}>
                  <Button title="CANCEL" onPress={this.closing} />
@@ -113,6 +139,12 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 16,
     textAlign: 'center',
+  },
+  title: {
+    color: 'black',
+    fontSize: 16,
+    textAlign: 'center',
+    fontStyle: 'italic',
   },
   url: {
     color: 'black',
