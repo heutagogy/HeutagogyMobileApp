@@ -16,10 +16,10 @@ const styles = StyleSheet.create({
   },
 });
 
-let navigator;
+let navigator = null // eslint-disable-line
 BackAndroid.addEventListener('hardwareBackPress', () => {
   if (navigator && navigator.getCurrentRoutes().length > 1) {
-    navigator.pop();
+    navigator.pop(); // eslint-disable-line
     return true;
   }
   return false;
@@ -88,7 +88,7 @@ export default class ArticlesPage extends Component { // eslint-disable-line
       rightElement="save"
       style={style}
       onRightElementPress={() =>
-        offlineContent ? navigator.push({ type: 'article', id: article.id }) : this.props.saveOffline(article.id)}
+        offlineContent ? navigator.push({ type: 'article', id: article.id }) : this.props.saveOffline(article.id)} // eslint-disable-line
     />)
   }
 
