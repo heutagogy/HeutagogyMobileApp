@@ -81,7 +81,7 @@ export default connect(
     return {
       authUser: state.getIn(['heutagogy', 'authUser']),
       meta: state.getIn(['heutagogy', 'meta']),
-      articles: state.getIn(['heutagogy', 'articles']),
+      articles: state.getIn(['heutagogy', 'articles'], fromJS([])),
     }
   },
   (dispatch) => ({
