@@ -76,16 +76,29 @@ export default class ArticlesPage extends Component { // eslint-disable-line
 
     const style = {
       rightElement: {
-        color: offlineContent ? COLOR.blue200 : COLOR.grey500,
+        color: offlineContent ? COLOR.blue300 : COLOR.grey300,
+      },
+      primaryText: article.read ? {
+        textDecorationLine: 'line-through',
+        color: COLOR.grey500,
+      } : {
+      },
+      secondaryText: article.read ? {
+        textDecorationLine: 'line-through',
+        color: COLOR.grey400,
+      } : {
       },
     }
 
     return (<ListItem
       key={article.id}
       divider
-      centerElement={article.title}
+      centerElement={{
+        primaryText: article.title,
+        secondaryText: article.url,
+      }}
       onPress={() => Linking.openURL(article.url)}
-      rightElement="save"
+      rightElement="file-download"
       style={style}
       onRightElementPress={() =>
         offlineContent ? navigator.push({ type: 'article', id: article.id }) : this.props.saveOffline(article.id)} // eslint-disable-line
