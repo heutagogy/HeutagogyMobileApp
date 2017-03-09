@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import Modal from 'react-native-modalbox'
 import ShareExtension from 'react-native-share-extension'
-import { Button, Text, View, StyleSheet } from 'react-native'
+import { Text, View, StyleSheet } from 'react-native'
+import { Dialog, DialogDefaultActions, ThemeProvider } from 'react-native-material-ui'
 import { RNSKBucket } from 'react-native-swiss-knife'
 import moment from 'moment'
 
@@ -13,7 +13,6 @@ export default class Share extends Component {
     super(props, context)
 
     this.state = {
-      isOpen: true,
       server: null, token: null, type: null, url: null,
       article: null,
     }
@@ -31,24 +30,18 @@ export default class Share extends Component {
 
     this.setState({ url: value })
 
-    this.getArticleByUrl(value).then((result) =>
-      this.setState({ article: result[0] || null })
-    )
+    this.fetchArticleInfo(value)
   }
 
-  onClose() {
-    ShareExtension.close()
-  }
-
-  closing = () => {
-    this.setState({ isOpen: false })
-  }
-
-  async getArticleByUrl(url) {
-    // Token and server are not yet set into state bucause of
+  async fetchArticleInfo(url) {
+    // Token and server are not yet set into state because of
     // asynchronous nature of setState.
     const server = await RNSKBucket.get('server')
     const token = await RNSKBucket.get('token')
+
+    if (!server || !token) {
+      return
+    }
 
     return fetch(`${server}/${API_VERSION}/bookmarks?url=${encodeURIComponent(url)}`, {
       method: 'GET',
@@ -56,11 +49,12 @@ export default class Share extends Component {
         'Authorization': `JWT ${token}`,
         'Accept': 'application/json',
       },
-    }).then((response) => response.json())
+    }).then((response) => response.json()
+    ).then((result) => this.setState({ article: result[0] || null }))
   }
 
   saveArticle() {
-    fetch(`${this.state.server}/${API_VERSION}/bookmarks`, {
+    return fetch(`${this.state.server}/${API_VERSION}/bookmarks`, {
       method: 'POST',
       headers: {
         'Authorization': `JWT ${this.state.token}`,
@@ -74,71 +68,78 @@ export default class Share extends Component {
     })
   }
 
-  saving = () => {
-    this.saveArticle()
-    this.closing()
+  handleActionPress = (action) => {
+    if (action === 'Cancel' || action === 'Close') {
+      ShareExtension.close()
+    } else if (action === 'Save') {
+      this.saveArticle().then(
+        () => ShareExtension.close(),
+        () => ShareExtension.close())
+    }
+  }
+
+  renderNoAuth = () => {
+    return (
+      <Dialog>
+        <Dialog.Title>You are not authorized</Dialog.Title>
+        <Dialog.Content>
+          <Text style={styles.msg}>Please, login into Heutagogy app </Text>
+        </Dialog.Content>
+        <Dialog.Actions>
+          <DialogDefaultActions
+            actions={['Close']}
+            onActionPress={this.handleActionPress}
+          />
+        </Dialog.Actions>
+      </Dialog>)
+  }
+
+  renderSaveDialog = () => {
+    return <Dialog>
+        <Dialog.Title>Save bookmark</Dialog.Title>
+        <Dialog.Content>
+          <Text style={styles.msg}>Do you want to save this link?</Text>
+          <Text style={styles.url}>{this.state.url}</Text>
+          {this.state.article
+           ? <View>
+             <Text style={styles.msg}>Already saved as</Text>
+             <Text style={styles.title}>{this.state.article.title}</Text>
+           </View>
+           : null}
+        </Dialog.Content>
+        <Dialog.Actions>
+          <DialogDefaultActions
+            actions={['Cancel', 'Save']}
+            onActionPress={this.handleActionPress}
+          />
+        </Dialog.Actions>
+    </Dialog>
   }
 
   render() {
     return (
-      <Modal
-        backdrop={false}
-        style={styles.modal}
-        position="center"
-        isOpen={this.state.isOpen}
-        onClosed={this.onClose}
-      >
-        <View style={styles.wrapper}>
-         { !this.state.server || !this.state.token
-         ? <View style={styles.loginContainer}>
-             <Text style={styles.msg}>Please, login into Heutagogy app </Text>
-             <View style={styles.buttons}>
-               <Button title="CLOSE" onPress={this.closing} />
-             </View>
-           </View>
-         : <View style={styles.container}>
-             <Text style={styles.url}>{ this.state.url }</Text>
-             <Text style={styles.msg}>Do you want to save this link?</Text>
-             {this.state.article
-              ? <View>
-                <Text style={styles.msg}>Already saved as</Text>
-                <Text style={styles.title}>{this.state.article.title}</Text>
-              </View>
-              : null}
-             <View style={styles.buttons}>
-               <View style={styles.button}>
-                 <Button title="CANCEL" onPress={this.closing} />
-               </View>
-               <View style={styles.button}>
-                 <Button title="SAVE" onPress={this.saving} />
-               </View>
-             </View>
-           </View>}
+      <ThemeProvider uiTheme={{}}>
+        <View style={styles.container}>
+          {(this.state.server && this.state.token)
+          ? this.renderSaveDialog()
+          : this.renderNoAuth()}
         </View>
-      </Modal>
+      </ThemeProvider>
     )
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
-    height: 200,
-    justifyContent: 'space-around',
-    padding: 10,
-    width: 300,
-  },
-  loginContainer: {
-    backgroundColor: 'white',
-    height: 130,
-    justifyContent: 'space-around',
-    padding: 10,
-    width: 300,
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
   },
   msg: {
     color: 'black',
     fontSize: 16,
     textAlign: 'center',
+    paddingTop: 16,
   },
   title: {
     color: 'black',
@@ -150,21 +151,5 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
     textAlign: 'center',
-  },
-  modal: {
-    backgroundColor: 'transparent',
-  },
-  wrapper: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-  },
-  buttons: {
-    alignItems: 'flex-end',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-  button: {
-    margin: 7,
   },
 })
