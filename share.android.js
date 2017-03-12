@@ -68,11 +68,42 @@ export default class Share extends Component {
     })
   }
 
+  setRead(read) {
+    return fetch(`${this.state.server}/${API_VERSION}/bookmarks/${this.state.article.id}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `JWT ${this.state.token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        read: (read ? moment().format() : null),
+      }),
+    })
+  }
+
+  deleteArticle() {
+    return fetch(`${this.state.server}/${API_VERSION}/bookmarks/${this.state.article.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `JWT ${this.state.token}`,
+      },
+    })
+  }
+
   handleActionPress = (action) => {
     if (action === 'Cancel' || action === 'Close') {
       ShareExtension.close()
     } else if (action === 'Save') {
       this.saveArticle().then(
+        () => ShareExtension.close(),
+        () => ShareExtension.close())
+    } else if (action === 'Read' || action === 'Unread') {
+      this.setRead(action === 'Read').then(
+        () => ShareExtension.close(),
+        () => ShareExtension.close())
+    } else if (action === 'Delete') {
+      this.deleteArticle().then(
         () => ShareExtension.close(),
         () => ShareExtension.close())
     }
@@ -100,12 +131,6 @@ export default class Share extends Component {
         <Dialog.Content>
           <Text style={styles.msg}>Do you want to save this link?</Text>
           <Text style={styles.url}>{this.state.url}</Text>
-          {this.state.article
-           ? <View>
-             <Text style={styles.msg}>Already saved as</Text>
-             <Text style={styles.title}>{this.state.article.title}</Text>
-           </View>
-           : null}
         </Dialog.Content>
         <Dialog.Actions>
           <DialogDefaultActions
@@ -116,13 +141,31 @@ export default class Share extends Component {
     </Dialog>
   }
 
+  renderSavedDialog = () => {
+    return <Dialog>
+      <Dialog.Title>Saved bookmark</Dialog.Title>
+      <Dialog.Content>
+        <Text style={styles.msg}>{'The article is saved as'}</Text>
+        <Text style={styles.title}>{this.state.article.title}</Text>
+      </Dialog.Content>
+      <Dialog.Actions>
+        <DialogDefaultActions
+          actions={['Cancel', 'Delete', (this.state.article.read ? 'Unread' : 'Read')]}
+          onActionPress={this.handleActionPress}
+        />
+      </Dialog.Actions>
+    </Dialog>
+  }
+
   render() {
     return (
       <ThemeProvider uiTheme={{}}>
         <View style={styles.container}>
-          {(this.state.server && this.state.token)
-          ? this.renderSaveDialog()
-          : this.renderNoAuth()}
+          {(!this.state.server || !this.state.token)
+           ? this.renderNoAuth()
+           : (this.state.article)
+           ? this.renderSavedDialog()
+           : this.renderSaveDialog()}
         </View>
       </ThemeProvider>
     )
