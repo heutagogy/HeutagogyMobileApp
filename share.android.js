@@ -157,15 +157,21 @@ export default class Share extends Component {
     </Dialog>
   }
 
+  renderModal() {
+    if (!this.state.server || !this.state.token) {
+      return this.renderNoAuth();
+    } else if (this.state.article) {
+      return this.renderSavedDialog();
+    } else {
+      return this.renderSaveDialog();
+    }
+  }
+
   render() {
     return (
       <ThemeProvider uiTheme={{}}>
         <View style={styles.container}>
-          {(!this.state.server || !this.state.token)
-           ? this.renderNoAuth()
-           : (this.state.article)
-           ? this.renderSavedDialog()
-           : this.renderSaveDialog()}
+          {this.renderModal()}
         </View>
       </ThemeProvider>
     )
