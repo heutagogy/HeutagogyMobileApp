@@ -92,20 +92,26 @@ export default class Share extends Component {
   }
 
   handleActionPress = (action) => {
-    if (action === 'Cancel' || action === 'Close') {
-      ShareExtension.close()
-    } else if (action === 'Save') {
-      this.saveArticle().then(
-        () => ShareExtension.close(),
-        () => ShareExtension.close())
-    } else if (action === 'Read' || action === 'Unread') {
-      this.setRead(action === 'Read').then(
-        () => ShareExtension.close(),
-        () => ShareExtension.close())
-    } else if (action === 'Delete') {
-      this.deleteArticle().then(
-        () => ShareExtension.close(),
-        () => ShareExtension.close())
+    const close = ShareExtension.close;
+    const closeOn = (action, param) => action(param).then(close, close);
+
+    switch (action) {
+      case 'Cancel':
+      case 'Close':
+        close();
+        break;
+      case 'Save':
+        closeOn(this.saveArticle);
+        break;
+      case 'Read':
+      case 'Unread':
+        closeOn(this.setRead, action === 'Read');
+        break;
+      case 'Delete':
+        closeOn(this.deleteArticle);
+        break;
+      default:
+        console.error('Unknown action');
     }
   }
 
@@ -157,15 +163,21 @@ export default class Share extends Component {
     </Dialog>
   }
 
+  renderModal() {
+    if (!this.state.server || !this.state.token) {
+      return this.renderNoAuth();
+    } else if (this.state.article) {
+      return this.renderSavedDialog();
+    } else {
+      return this.renderSaveDialog();
+    }
+  }
+
   render() {
     return (
       <ThemeProvider uiTheme={{}}>
         <View style={styles.container}>
-          {(!this.state.server || !this.state.token)
-           ? this.renderNoAuth()
-           : (this.state.article)
-           ? this.renderSavedDialog()
-           : this.renderSaveDialog()}
+          {this.renderModal()}
         </View>
       </ThemeProvider>
     )
