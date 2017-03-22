@@ -16,6 +16,10 @@ export default class Share extends Component {
       server: null, token: null, type: null, url: null,
       article: null,
     }
+
+    this.saveArticle = this.saveArticle.bind(this);
+    this.deleteArticle = this.deleteArticle.bind(this);
+    this.setRead = this.setRead.bind(this);
   }
 
   async componentWillMount() {
