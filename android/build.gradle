@@ -22,3 +22,20 @@ allprojects {
         }
     }
 }
+
+// Override build tools version for all subprojects
+// https://medium.com/bam-tech/boost-compilation-time-of-your-react-native-or-android-app-with-the-latest-build-tools-a3d5d398ed33
+ext {
+    compileSdkVersion = 26
+    buildToolsVersion = '26.0.1'
+}
+subprojects { subproject ->
+    afterEvaluate{
+        if((subproject.plugins.hasPlugin('android') || subproject.plugins.hasPlugin('android-library'))) {
+            android {
+                compileSdkVersion rootProject.ext.compileSdkVersion
+                buildToolsVersion rootProject.ext.buildToolsVersion
+            }
+        }
+    }
+}
