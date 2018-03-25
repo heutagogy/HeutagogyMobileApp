@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ShareExtension from 'react-native-share-extension'
-import { Text, View, StyleSheet } from 'react-native'
+import { ActivityIndicator, Text, View, StyleSheet } from 'react-native'
 import { Dialog, DialogDefaultActions, ThemeProvider } from 'react-native-material-ui'
 import { RNSKBucket } from 'react-native-swiss-knife'
 import moment from 'moment'
@@ -13,6 +13,7 @@ export default class Share extends Component {
     super(props, context)
 
     this.state = {
+      initializing: true, fetching: false,
       server: null, token: null, type: null, url: null,
       article: null,
     }
@@ -26,15 +27,15 @@ export default class Share extends Component {
     const server = await RNSKBucket.get('server')
     const token = await RNSKBucket.get('token')
 
-    this.setState({ server, token })
+    this.setState({ server, token, initializing: false })
   }
 
   async componentDidMount() {
     const { value } = await ShareExtension.data()
 
-    this.setState({ url: value })
+    this.setState({ url: value, fetching: true })
 
-    this.fetchArticleInfo(value)
+    this.fetchArticleInfo(value).finally(() => this.setState({ fetching: false }));
   }
 
   async fetchArticleInfo(url) {
@@ -119,6 +120,22 @@ export default class Share extends Component {
     }
   }
 
+  renderLoading = () => {
+    return (
+      <Dialog>
+        <Dialog.Title>Loading</Dialog.Title>
+        <Dialog.Content>
+          <ActivityIndicator size="large"/>
+        </Dialog.Content>
+        <Dialog.Actions>
+          <DialogDefaultActions
+            actions={['Close']}
+            onActionPress={this.handleActionPress}
+            />
+        </Dialog.Actions>
+      </Dialog>)
+  }
+
   renderNoAuth = () => {
     return (
       <Dialog>
@@ -168,7 +185,9 @@ export default class Share extends Component {
   }
 
   renderModal() {
-    if (!this.state.server || !this.state.token) {
+    if (this.state.initializing || this.state.fetching) {
+      return this.renderLoading();
+    } else if (!this.state.server || !this.state.token) {
       return this.renderNoAuth();
     } else if (this.state.article) {
       return this.renderSavedDialog();
